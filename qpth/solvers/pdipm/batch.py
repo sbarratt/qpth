@@ -82,12 +82,12 @@ def forward(Q, p, G, h, A, b, Q_LU, S_LU, R, eps=1e-12, verbose=0, notImprovedLi
     # Make all of the slack variables >= 1.
     M = torch.min(s, 1)[0].repeat(1, nineq)
     I = M < 0
-    s[I] -= M[I] - 1
+    s[I.view(s.size())] -= M[I] - 1
 
     # Make all of the inequality dual variables >= 1.
     M = torch.min(z, 1)[0].repeat(1, nineq)
     I = M < 0
-    z[I] -= M[I] - 1
+    z[I.view(s.size())] -= M[I] - 1
 
     best = {'resids': None, 'x': None, 'z': None, 's': None, 'y': None}
     nNotImproved = 0
